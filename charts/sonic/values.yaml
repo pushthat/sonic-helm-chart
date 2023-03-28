@@ -33,7 +33,8 @@ persistence:
   size: 20Gi
   annotations: {}
 
-resources: {}
+resources:
+  replicas: 1
 
 nodeSelector: {}
 
