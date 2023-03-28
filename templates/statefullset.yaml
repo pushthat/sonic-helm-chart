@@ -28,7 +28,7 @@ spec:
           volumeMounts:
           {{- if .Values.persistence.enabled }}
             - name: data
-              mountPath: /var/lib/sonic/store/
+              mountPath: /usr/src/sonic/data
           {{ end }}
             - name: sonic-config
               mountPath: /etc/config
@@ -50,13 +50,10 @@ spec:
       tolerations:
 {{ toYaml . | indent 8 }}
     {{- end }}
-
       volumes:
         - name: sonic-config
           configMap:
             name: {{ include "sonic-helm-chart.fullname" . }}
-
-
 {{- if .Values.persistence.enabled }}
   volumeClaimTemplates:
     - metadata:
