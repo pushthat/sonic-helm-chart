@@ -8,7 +8,7 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
-  replicas: {{ .Values.resources.replicas }}
+  replicas: {{ .Values.replicas }}
   serviceName: {{ include "sonic-helm-chart.fullname" . }}
   selector:
     matchLabels:
@@ -33,7 +33,7 @@ spec:
             - name: sonic-config
               mountPath: /etc/config
           ports:
-            - name: sonic
+            - name: http
               containerPort: 1491
               protocol: TCP
           resources:

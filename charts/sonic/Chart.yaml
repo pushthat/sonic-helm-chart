@@ -2,4 +2,4 @@ apiVersion: v1
 appVersion: "v1.4.0"
 description: Sonic is a fast, lightweight and schema-less search backend
 name: sonic
-version: 0.5.0
+version: 0.6.0
