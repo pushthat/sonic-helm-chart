@@ -1,5 +1,4 @@
-
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: {{ include "sonic-helm-chart.fullname" . }}
@@ -9,7 +8,8 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.replicas }}
+  serviceName: {{ include "sonic-helm-chart.fullname" . }}
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "sonic-helm-chart.name" . }}
@@ -28,12 +28,12 @@ spec:
           volumeMounts:
           {{- if .Values.persistence.enabled }}
             - name: data
-              mountPath: /var/lib/sonic/store/
+              mountPath: /usr/src/sonic/data
           {{ end }}
             - name: sonic-config
               mountPath: /etc/config
           ports:
-            - name: sonic
+            - name: http
               containerPort: 1491
               protocol: TCP
           resources:
@@ -50,13 +50,10 @@ spec:
       tolerations:
 {{ toYaml . | indent 8 }}
     {{- end }}
-
       volumes:
         - name: sonic-config
           configMap:
             name: {{ include "sonic-helm-chart.fullname" . }}
-
-
 {{- if .Values.persistence.enabled }}
   volumeClaimTemplates:
     - metadata:

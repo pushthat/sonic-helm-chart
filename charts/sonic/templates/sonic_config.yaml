@@ -4,21 +4,18 @@ metadata:
   name: {{ include "sonic-helm-chart.fullname" . }}
 data:
   sonic.cfg: |-
-    # Sonic
-    # Fast, lightweight and schema-less search backend
     # Configuration file
-    # Example: https://github.com/valeriansaliou/sonic/blob/master/config.cfg
 
     [server]
 
-    log_level = "error"
+    log_level = "debug"
 
     [channel]
 
-    inet = "0.0.0.0:1491"
+    inet = "[::1]:1491"
     tcp_timeout = 300
 
-    auth_password = "SecretPassword"
+    auth_password = "{{ .Values.sonic.password }}"
 
     [channel.search]
 
@@ -28,6 +25,9 @@ data:
 
     suggest_limit_default = 5
     suggest_limit_maximum = 20
+
+    list_limit_default = 100
+    list_limit_maximum = 500
 
     [store]
 
@@ -43,11 +43,15 @@ data:
 
     [store.kv.database]
 
+    flush_after = 900
+
     compress = true
     parallelism = 2
     max_files = 100
     max_compactions = 1
     max_flushes = 1
+    write_buffer = 16384
+    write_ahead_log = true
 
     [store.fst]
 
@@ -59,4 +63,7 @@ data:
 
     [store.fst.graph]
 
+    consolidate_after = 180
 
+    max_size = 2048
+    max_words = 250000
